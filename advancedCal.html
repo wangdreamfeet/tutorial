@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple Calculator</title>
+    <style>
+        /* CSS styles for the calculator */
+        .calculator {
+            width: 500px;
+            padding: 30px;
+            border: 6px solid #000000;
+            border-radius: 15px;
+            margin: 0 auto;
+            background-color: #f2f2f2;
+        }
+
+        .calculator input {
+            width: 100%;
+            height: 60px;
+            font-size: 40px;
+            margin-bottom: 30px;
+            background-color: #fff;
+            color: #333;
+        }
+
+        .calculator button {
+            width: 80px;
+            height: 90px;
+            font-size: 36px;
+            margin-right: 30px;
+            background-color: #525151;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+        }
+
+        .calculator button:hover {
+            background-color: #999;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="calculator">
+        <input type="text" id="result" readonly>
+        <button onclick="clearResult()">C</button>
+        <button onclick="appendCharacter('(')">(</button>
+        <button onclick="appendCharacter(')')">)</button>
+        <button onclick="backspace()">⌫</button>
+        <button onclick="appendCharacter('7')">7</button>
+        <button onclick="appendCharacter('8')">8</button>
+        <button onclick="appendCharacter('9')">9</button>
+        <button onclick="appendOperator('+')">+</button>
+        <button onclick="appendCharacter('4')">4</button>
+        <button onclick="appendCharacter('5')">5</button>
+        <button onclick="appendCharacter('6')">6</button>
+        <button onclick="appendOperator('-')">-</button>
+        <button onclick="appendCharacter('1')">1</button>
+        <button onclick="appendCharacter('2')">2</button>
+        <button onclick="appendCharacter('3')">3</button>
+        <button onclick="appendOperator('*')">*</button>
+        <button onclick="appendCharacter('0')">0</button>
+        <button onclick="calculate()">=</button>
+        <button onclick="appendOperator('/')">/</button>
+        <button onclick="appendDecimal()">.</button>
+        <button onclick="calculateSin()">sin</button>
+        <button onclick="calculateCos()">cos</button>
+        <button onclick="calculateTan()">tan</button>
+        <button onclick="viewHistory()">H</button>
+    </div>
+
+    <script>
+        // Array to store the history
+        const history = [];
+
+        // JavaScript functions to handle the calculator operations
+        function clearResult() {
+            document.getElementById('result').value = '';
+        }
+
+        function appendCharacter(character) {
+            document.getElementById('result').value += character;
+        }
+
+        function backspace() {
+            const currentResult = document.getElementById('result').value;
+            document.getElementById('result').value = currentResult.slice(0, -1);
+        }
+
+        function appendOperator(operator) {
+            document.getElementById('result').value += operator;
+        }
+
+        function appendDecimal() {
+            document.getElementById('result').value += '.';
+        }
+
+        function calculate() {
+            const expression = document.getElementById('result').value;
+            try {
+                const result = eval(expression);
+                document.getElementById('result').value = result;
+                addToHistory(expression, result);
+            } catch (error) {
+                document.getElementById('result').value = 'Error';
+            }
+        }
+
+        function calculateSin() {
+            const degree = parseFloat(document.getElementById('result').value);
+            const radian = degree * (Math.PI / 180);
+            document.getElementById('result').value = Math.sin(radian);
+            addToHistory(`sin(${degree}°)`, Math.sin(radian));
+        }
+
+        function calculateCos() {
+            const degree = parseFloat(document.getElementById('result').value);
+            const radian = degree * (Math.PI / 180);
+            document.getElementById('result').value = Math.cos(radian);
+            addToHistory(`cos(${degree}°)`, Math.cos(radian));
+        }
+
+        function calculateTan() {
+            const degree = parseFloat(document.getElementById('result').value);
+            const radian = degree * (Math.PI / 180);
+            document.getElementById('result').value = Math.tan(radian);
+            addToHistory(`tan(${degree}°)`, Math.tan(radian));
+        }
+
+        function viewHistory() {
+            let historyString = '';
+            for (let i = 0; i < history.length; i++) {
+                historyString += `${history[i].expression} = ${history[i].result}\n`;
+            }
+            alert(historyString);
+        }
+
+        function addToHistory(expression, result) {
+            history.push({ expression, result });
+            if (history.length > 10) {
+                history.shift();
+            }
+        }
+    </script>
+</body>
+
+</html>
