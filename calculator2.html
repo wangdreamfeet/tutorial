@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>计算器</title>
+    <style>
+        .calculator {
+            width: 300px;
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        .calculator input[type="text"] {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .calculator input[type="submit"] {
+            width: 100%;
+            padding: 5px;
+        }
+
+        .calculator .result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .calculator .history {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .calculator .history h3 {
+            margin-top: 0;
+        }
+
+        .calculator .history ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .calculator .history li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="calculator">
+        <h1>计算器</h1>
+        <form id="calculatorForm">
+            <input type="text" id="expression" name="expression" required><br>
+            <input type="button" value="1" onclick="appendToExpression('1')">
+            <input type="button" value="2" onclick="appendToExpression('2')">
+            <input type="button" value="3" onclick="appendToExpression('3')">
+            <input type="button" value="+" onclick="appendToExpression('+')"><br>
+            <input type="button" value="4" onclick="appendToExpression('4')">
+            <input type="button" value="5" onclick="appendToExpression('5')">
+            <input type="button" value="6" onclick="appendToExpression('6')">
+            <input type="button" value="-" onclick="appendToExpression('-')"><br>
+            <input type="button" value="7" onclick="appendToExpression('7')">
+            <input type="button" value="8" onclick="appendToExpression('8')">
+            <input type="button" value="9" onclick="appendToExpression('9')">
+            <input type="button" value="*" onclick="appendToExpression('*')"><br>
+            <input type="button" value="0" onclick="appendToExpression('0')">
+            <input type="button" value="." onclick="appendToExpression('.')">
+            <input type="button" value="^" onclick="appendToExpression('**')">
+            <input type="button" value="/" onclick="appendToExpression('/')"><br>
+            <input type="button" value="sin" onclick="appendToExpression('Math.sin(')">
+            <input type="button" value="cos" onclick="appendToExpression('Math.cos(')">
+            <input type="button" value="tan" onclick="appendToExpression('Math.tan(')">
+            <input type="button" value="log" onclick="appendToExpression('Math.log(')"><br>
+            <input type="submit" value="计算">
+        </form>
+        <div class="result" id="result"></div>
+        <div class="history">
+            <h3>历史记录</h3>
+            <ul id="historyList"></ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('calculatorForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var expression = document.getElementById('expression').value;
+
+            fetch('/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ expression: expression })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('result').textContent = '结果: ' + data.result;
+                    document.getElementById('expression').value = ''; // 清空输入框
+                    loadHistory();
+                });
+        });
+
+        function appendToExpression(value) {
+            document.getElementById('expression').value += value;
+        }
+
+        function loadHistory() {
+            fetch('/history')
+                .then(response => response.json())
+                .then(data => {
+                    var historyList = document.getElementById('historyList');
+                    historyList.innerHTML = '';
+
+                    data.forEach(item => {
+                        var listItem = document.createElement('li');
+                        listItem.textContent = item;
+                        historyList.appendChild(listItem);
+                    });
+                });
+        }
+
+        loadHistory();
+    </script>
+</body>
+
+</html>
