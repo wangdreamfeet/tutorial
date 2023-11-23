@@ -1,0 +1,53 @@
+<html>
+
+<head>
+    <title> start menu</title>
+
+    <style>
+        #StartScreen,
+        #GameCanvas {
+            height: 200px;
+            width: 400px;
+            background: gray;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            margin-top: -100px;
+            margin-left: -200px;
+            text-align: center;
+        }
+
+
+        #StartButton:hover {
+            cursor: pointer;
+            background: blue;
+        }
+
+        #QuitButton:hover {
+            cursor: pointer;
+            background: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="StartScreen">
+        <h1>游戏开始界面</h1>
+        <input id="StartButton" type="button" value="StartGame" onclick="startgame()" /> <br> <br>
+        <input id="QuitButton" type="button" value="QuitGame" onclick="quitgame()" />
+    </div>
+
+    <canvas id="GameCanvas" style="display: none;background:black;">Game Canvas </canvas>
+
+    <script>
+        function startgame() {
+            document.getElementById("StartScreen").style.display = 'none';
+            document.getElementById("GameCanvas").style.display = 'inline';
+        };
+
+        function quitgame() {
+            document.getElementById("StartScreen").style.display = 'none'
+            alert("Quit Game");
+        }
+    </script>
+</body>
